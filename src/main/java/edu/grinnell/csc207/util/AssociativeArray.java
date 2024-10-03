@@ -10,7 +10,7 @@ import static java.lang.reflect.Array.newInstance;
  * @param <K> the key type
  * @param <V> the value type
  *
- * @author Your Name Here
+ * @author A.J. Trimble
  * @author Samuel A. Rebelsky
  */
 public class AssociativeArray<K, V> {
@@ -62,7 +62,17 @@ public class AssociativeArray<K, V> {
    * @return a new copy of the array
    */
   public AssociativeArray<K, V> clone() {
-    return null; // STUB
+    AssociativeArray<K, V> clone = new AssociativeArray<>();
+    clone.size = this.size;
+    int temp = this.size;
+    while (temp > DEFAULT_CAPACITY) {
+      temp -= DEFAULT_CAPACITY;
+      clone.expand();
+    } // whil
+    for (int i = 0; i < this.size; i++) {
+      clone.pairs[i] = this.pairs[i].clone();
+    } // for
+    return clone;
   } // clone()
 
   /**
@@ -71,7 +81,11 @@ public class AssociativeArray<K, V> {
    * @return a string of the form "{Key0:Value0, Key1:Value1, ... KeyN:ValueN}"
    */
   public String toString() {
-    return "{}"; // STUB
+    String output = "";
+    for (int i = 0; i < this.size; i++) {
+      output = output + this.pairs[i].key + ":" + this.pairs[i].val + ", ";
+    } // for
+    return "{" + output.substring(0, (output.length() - 2)) + "}";
   } // toString()
 
   // +----------------+----------------------------------------------
@@ -91,7 +105,20 @@ public class AssociativeArray<K, V> {
    *   If the client provides a null key.
    */
   public void set(K key, V value) throws NullKeyException {
-    // STUB
+    if (key == null) {
+      throw new NullKeyException("Null key is invalid.");
+    } // if
+    for (int i = 0; i < this.size; i++) {
+      if (this.pairs[i].key.equals(key)) {
+        this.pairs[i].val = value;
+        return;
+      } // if
+    } // for
+    if (this.size == this.pairs.length) {
+      expand();
+    } // if
+    this.pairs[this.size] = new KVPair<K, V>(key, value);
+    this.size++;
   } // set(K,V)
 
   /**
@@ -107,7 +134,15 @@ public class AssociativeArray<K, V> {
    *   when the key is null or does not appear in the associative array.
    */
   public V get(K key) throws KeyNotFoundException {
-    return null; // STUB
+    if (key == null) {
+      throw new KeyNotFoundException("Null key is invalid.");
+    } // if
+    for (int i = 0; i < this.size; i++) {
+      if (this.pairs[i].key.equals(key)) {
+        return this.pairs[i].val;
+      } // if
+    } // for
+    throw new KeyNotFoundException("The key was not found");
   } // get(K)
 
   /**
@@ -120,7 +155,12 @@ public class AssociativeArray<K, V> {
    * @return true if the key appears and false otherwise.
    */
   public boolean hasKey(K key) {
-    return false; // STUB
+    for (int i = 0; i < this.size; i++) {
+      if (this.pairs[i].key.equals(key)) {
+        return true;
+      } // if
+    } // for
+    return false;
   } // hasKey(K)
 
   /**
@@ -132,7 +172,16 @@ public class AssociativeArray<K, V> {
    *   The key to remove.
    */
   public void remove(K key) {
-    // STUB
+    for (int i = 0; i < this.size; i++) {
+      if (this.pairs[i].key.equals(key)) {
+        for (; i < this.size - 1; i++) {
+          this.pairs[i] = this.pairs[i + 1];
+        } // for
+        this.pairs[this.size - 1] = null;
+        this.size = this.size - 1;
+        return;
+      } // if
+    } // for
   } // remove(K)
 
   /**
@@ -169,7 +218,14 @@ public class AssociativeArray<K, V> {
    *   If the key does not appear in the associative array.
    */
   int find(K key) throws KeyNotFoundException {
-    throw new KeyNotFoundException();   // STUB
+    for (int i = 0; i < this.size; i++) {
+      if (this.pairs[i].key.equals(key)) {
+        return i;
+      } // if
+    } // for
+    throw new KeyNotFoundException(); 
   } // find(K)
 
 } // class AssociativeArray
+
+
