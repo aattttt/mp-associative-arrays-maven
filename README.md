@@ -1,7 +1,7 @@
 Associative Arrays
 ==================
 
-Starter code for a CSC-207 project on associative arrays.
+Code for a CSC-207 project on associative arrays.
 
 Class: CSC 207 2024
 Author: A.J. Trimble
